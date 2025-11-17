@@ -1,0 +1,42 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\PetitionController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+*/
+
+// Static Page Routes
+Route::get('/', [PageController::class, 'home'])->name('home');
+Route::get('/about-us', [PageController::class, 'about'])->name('about');
+
+// Petition Routes
+Route::get('/explore', [PetitionController::class, 'index'])->name('petitions.index');
+Route::get('/start-petition', [PetitionController::class, 'create'])->name('petitions.create');
+Route::post('/start-petition', [PetitionController::class, 'store'])->name('petitions.store');
+// You'll add this route later to handle the form submission
+// Route::post('/start-petition', [PetitionController::class, 'store'])->name('petitions.store');
+
+
+// Authentication Routes
+// 'guest' middleware means only unauthenticated users can see it
+Route::get('/log-in', [LoginController::class, 'create'])->middleware('guest')->name('login');
+Route::post('/log-in', [LoginController::class, 'store'])->middleware('guest')->name('login.store');
+Route::post('/log-out', [LoginController::class, 'destroy'])->middleware('auth')->name('logout');
+
+
+// --- Add these new registration routes ---
+Route::get('/register', [RegisterController::class, 'create'])->middleware('guest')->name('register');
+Route::post('/register', [RegisterController::class, 'store'])->middleware('guest')->name('register.store');
+
+// 'auth' middleware means only logged-in users can access it
+Route::post('/log-out', [LoginController::class, 'destroy'])->middleware('auth')->name('logout');
+
+// You will also need a User model, but Laravel includes one by default in `app/Models/User.php`
+// You just need to create the 'users' table in your database.
