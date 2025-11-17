@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
+    /** 
+      * Login System made by Daniel Adrian 102022440011
+      */      
+
 class LoginController extends Controller
 {
     /**
