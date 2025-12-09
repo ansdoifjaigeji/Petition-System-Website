@@ -5,6 +5,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\PetitionController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\UserProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,5 +39,7 @@ Route::post('/register', [RegisterController::class, 'store'])->middleware('gues
 // 'auth' middleware means only logged-in users can access it
 Route::post('/log-out', [LoginController::class, 'destroy'])->middleware('auth')->name('logout');
 
-// You will also need a User model, but Laravel includes one by default in `app/Models/User.php`
-// You just need to create the 'users' table in your database.
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [UserProfileController::class, 'show'])->name('profile.show');
+    Route::get('/settings', [UserProfileController::class, 'settings'])->name('profile.settings');
+});

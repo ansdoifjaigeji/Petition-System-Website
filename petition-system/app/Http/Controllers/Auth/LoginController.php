@@ -7,10 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
-    /** 
-      * Login System made by Daniel Adrian 102022440011
-      */      
-
 class LoginController extends Controller
 {
     /**
@@ -38,12 +34,12 @@ class LoginController extends Controller
             $request->session()->regenerate();
 
             // 4. Redirect to the intended page or home
-            return redirect()->intended(route('home'));
+            return redirect()->intended(route('home'))->with('success', 'Login successful! Welcome back.');
         }
 
         // 5. If login fails, redirect back with an error
         throw ValidationException::withMessages([
-            'email' => __('auth.failed'), // This is a standard "These credentials do not match our records." message
+            'email' => __('auth.failed'),
         ]);
     }
 
@@ -57,6 +53,6 @@ class LoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect(route('home'));
+        return redirect(route('home'))->with('logout', 'You have been logged out successfully.');
     }
 }
