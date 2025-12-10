@@ -33,11 +33,27 @@ class LoginController extends Controller
             // 3. Regenerate the session ID for security
             $request->session()->regenerate();
 
-            // 4. Redirect to the intended page or home
+            // 4. If JSON is expected (API/AJAX), return a JSON payload
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Login successful',
+                    'user' => auth()->user()->only(['id', 'name', 'email', 'dark_mode']),
+                ]);
+            }
+
+            // Otherwise redirect to the intended page or home
             return redirect()->intended(route('home'))->with('success', 'Login successful! Welcome back.');
         }
 
         // 5. If login fails, redirect back with an error
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => false,
+                'errors' => ['email' => [__('auth.failed')]],
+            ], 422);
+        }
+
         throw ValidationException::withMessages([
             'email' => __('auth.failed'),
         ]);

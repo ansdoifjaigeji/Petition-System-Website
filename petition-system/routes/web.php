@@ -37,8 +37,6 @@ Route::get('/register', [RegisterController::class, 'create'])->middleware('gues
 Route::post('/register', [RegisterController::class, 'store'])->middleware('guest')->name('register.store');
 
 // 'auth' middleware means only logged-in users can access it
-Route::post('/log-out', [LoginController::class, 'destroy'])->middleware('auth')->name('logout');
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [UserProfileController::class, 'show'])->name('profile.show');
     Route::get('/settings', [UserProfileController::class, 'settings'])->name('profile.settings');

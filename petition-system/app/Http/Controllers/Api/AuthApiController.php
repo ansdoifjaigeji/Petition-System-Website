@@ -47,6 +47,35 @@ class AuthApiController extends Controller
     }
 
     /**
+     * Register via API (Creates user and returns token)
+     */
+    public function register(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        // create token
+        $token = $user->createToken('mobile-app')->plainTextToken;
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Registration successful',
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+            'user' => $user,
+        ], 201);
+    }
+
+    /**
      * Logout via API (Revokes the Token)
      */
     public function logout(Request $request)

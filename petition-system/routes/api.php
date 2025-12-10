@@ -15,6 +15,8 @@ use App\Http\Controllers\Api\AuthApiController; // <-- Import the new controller
 
 // Login
 Route::post('/login', [AuthApiController::class, 'login']);
+// Register
+Route::post('/register', [AuthApiController::class, 'register']);
 
 // Get Petitions
 Route::get('/petitions', [PetitionApiController::class, 'index']);
