@@ -30,7 +30,7 @@
         }
 
         .hero-section {
-            background-image: url("{{ asset('images/hero-background.jpg') }}");
+            background-image: url("{{ asset('images/hero-background.jpg.jpg') }}");
             background-size: cover;
             background-position: center;
             height: 70vh;
@@ -49,6 +49,10 @@
             right: 0;
             bottom: 0;
             background-color: rgba(0, 0, 0, 0.45);
+        }
+
+        .dark .hero-section {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("{{ asset('images/hero-background.jpg.jpg') }}");
         }
     </style>
 </head>
