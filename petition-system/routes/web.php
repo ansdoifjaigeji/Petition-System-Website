@@ -42,4 +42,5 @@ Route::post('/log-out', [LoginController::class, 'destroy'])->middleware('auth')
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [UserProfileController::class, 'show'])->name('profile.show');
     Route::get('/settings', [UserProfileController::class, 'settings'])->name('profile.settings');
+    Route::post('/settings/preferences', [UserProfileController::class, 'updatePreferences'])->name('profile.preferences.update');
 });

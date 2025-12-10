@@ -9,6 +9,7 @@
 
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
@@ -19,7 +20,7 @@
             }
         }
     </script>
-
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
         
@@ -51,7 +52,7 @@
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900">
+<body class="{{ auth()->check() && auth()->user()->dark_mode ? 'dark bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-900' }}">
 
     @if (session('success'))
         <div id="flash-message" class="fixed top-5 right-5 bg-green-600 text-white px-6 py-4 rounded-lg shadow-2xl z-50 flex items-center border-l-4 border-green-800 transform transition-all duration-500 translate-y-0 opacity-100">
@@ -62,7 +63,7 @@
             </div>
             <button onclick="document.getElementById('flash-message').remove()" class="ml-6 text-green-200 hover:text-white focus:outline-none"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
         </div>
-        <script>setTimeout(function() { const f = document.getElementById('flash-message'); if(f){ f.style.opacity='0'; setTimeout(()=>f.remove(),500); } }, 4000);</script>
+        <script>setTimeout(function() { const f = document.getElementById('flash-message'); if(f){ f.style.opacity='0'; setTimeout(()=>f.remove(),500); } }, 100);</script> <!-- this part is to configure the pop up message timer, change the 100 if you want to configure it -->
     @endif
 
     @if (session('logout'))
@@ -74,7 +75,7 @@
             </div>
             <button onclick="document.getElementById('flash-message-red').remove()" class="ml-6 text-red-200 hover:text-white focus:outline-none"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
         </div>
-        <script>setTimeout(function() { const f = document.getElementById('flash-message-red'); if(f){ f.style.opacity='0'; setTimeout(()=>f.remove(),500); } }, 4000);</script>
+        <script>setTimeout(function() { const f = document.getElementById('flash-message-red'); if(f){ f.style.opacity='0'; setTimeout(()=>f.remove(),500); } }, 100);</script> <!-- this part is to configure the pop up message timer, change the 100 if you want to configure it -->
     @endif
 
     <header class="bg-white shadow-md relative z-40">
@@ -113,6 +114,7 @@
                                     <p class="text-sm font-bold text-gray-900 truncate">{{ auth()->user()->email }}</p>
                                 </div>
                                 <a href="{{ route('profile.show') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Your Profile</a>
+                                <a href="{{ route('profile.settings') }}#preferences" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Preferences</a>
                                 <a href="{{ route('profile.settings') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
                                 <div class="border-t border-gray-100 my-1"></div>
                                 <form action="{{ route('logout') }}" method="POST">
