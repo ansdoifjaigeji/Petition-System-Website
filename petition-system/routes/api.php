@@ -30,6 +30,15 @@ Route::middleware('auth:sanctum')->group(function () {
     // Logout
     Route::post('/logout', [AuthApiController::class, 'logout']);
 
+    // Delete Account
+    Route::post('/delete-account', [AuthApiController::class, 'deleteAccount']);
+
+    // Update Profile (name, email)
+    Route::post('/user/update', [AuthApiController::class, 'updateProfile']);
+
+    // Change Password
+    Route::post('/user/change-password', [AuthApiController::class, 'changePassword']);
+
     // Get Current User Profile
     Route::get('/user', function (Request $request) {
         return $request->user();

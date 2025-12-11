@@ -16,6 +16,7 @@ class RegisterController extends Controller
      */
     public function create()
     {
+        // Display the registration form (GET /register)
         return view('auth.register');
     }
 
@@ -32,6 +33,7 @@ class RegisterController extends Controller
         ]);
 
         // 2. Create the new user in the database
+        // Password is hashed before storing to keep credentials secure
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -39,6 +41,8 @@ class RegisterController extends Controller
         ]);
 
         // 3. Log the new user in
+        // After registration we sign the user in (session-based) so they can
+        // continue to the app immediately without a separate login step.
         Auth::login($user);
 
         // 4. Redirect them to the home page

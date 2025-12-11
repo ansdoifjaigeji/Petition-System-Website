@@ -7,6 +7,9 @@
 <section class="hero-section">
     <div class="hero-overlay"></div>
     <div class="z-10 max-w-4xl px-4">
+        {{-- Hero banner heading: visually prominent CTA on the homepage. The
+             `.hero-overlay` above provides contrast so this text remains readable
+             on top of the background image. --}}
         <h1 class="text-5xl sm:text-7xl font-extrabold text-white leading-tight mb-6 tracking-tight">
             BE THE CHANGE.
             <span class="block mt-2">CREATE YOUR PETITION</span>

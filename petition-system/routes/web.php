@@ -40,5 +40,10 @@ Route::post('/register', [RegisterController::class, 'store'])->middleware('gues
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [UserProfileController::class, 'show'])->name('profile.show');
     Route::get('/settings', [UserProfileController::class, 'settings'])->name('profile.settings');
+
+    // Profile settings: preferences, profile update, password change, delete
     Route::post('/settings/preferences', [UserProfileController::class, 'updatePreferences'])->name('profile.preferences.update');
+    Route::post('/settings/profile', [UserProfileController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/settings/password', [UserProfileController::class, 'changePassword'])->name('profile.password.update');
+    Route::post('/settings/delete-account', [UserProfileController::class, 'deleteAccount'])->name('profile.delete-account');
 });

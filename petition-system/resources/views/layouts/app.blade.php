@@ -7,6 +7,9 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
 
+    {{-- Configure Tailwind CDN: enable class-based dark mode and extend colors
+         This script runs client-side and tells Tailwind to treat `.dark` as the
+         toggle for dark variants used throughout the templates. --}}
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -29,6 +32,10 @@
             background-color: #f7f7f7;
         }
 
+        /* Hero section: background image and overlay
+           Using the `asset()` helper ensures the path is generated correctly.
+           Note: we keep a dark-mode variation that applies an additional
+           gradient when the `.dark` class is present on the body. */
         .hero-section {
             background-image: url("{{ asset('images/hero-background.jpg.jpg') }}");
             background-size: cover;
@@ -42,6 +49,8 @@
             text-align: center;
         }
 
+        /* Semi-opaque overlay placed above the background image to improve
+           text contrast. */
         .hero-overlay {
             position: absolute;
             top: 0;
@@ -51,6 +60,8 @@
             background-color: rgba(0, 0, 0, 0.45);
         }
 
+        /* Dark-mode specific hero styling: add a stronger gradient when the
+           page is in dark mode to ensure legibility. */
         .dark .hero-section {
             background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("{{ asset('images/hero-background.jpg.jpg') }}");
         }
@@ -175,6 +186,8 @@
         </div>
     </footer>
 
+    {{-- Small script to toggle the mobile menu visibility. Kept minimal and
+         executes after DOM load to attach the click handler. --}}
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const button = document.getElementById('mobile-menu-button');
