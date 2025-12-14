@@ -43,4 +43,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'dark_mode' => 'boolean',
     ];
+
+    public function donations() {
+        return $this->hasMany(Donation::class);
+    }
 }

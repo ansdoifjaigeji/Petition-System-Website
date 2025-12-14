@@ -22,4 +22,9 @@ class Petition extends Model
         'signature_count',
         // 'user_id', // You can add this later
     ];
+
+    public function donations()
+    {
+        return $this->hasMany(Donation::class);
+    }
 }
