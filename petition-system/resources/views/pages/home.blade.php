@@ -4,6 +4,8 @@
 
 @section('content')
 
+
+
 <section class="hero-section">
     <div class="hero-overlay"></div>
     <div class="z-10 max-w-4xl px-4">
@@ -16,6 +18,47 @@
             LAUNCH YOUR CAUSE NOW
         </a>
     </div>
+</section>
+
+<section class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+    <h2 class="text-3xl font-bold text-gray-800 mb-6">Articles</h2>
+
+    @if($posts->count() === 0)
+        <div class="text-center text-gray-600 py-8 bg-white rounded-xl shadow-lg">
+            @auth
+                @if(auth()->user()->isAdmin())
+                    <a href="{{ route('posts.create') }}"
+                       class="text-primary-orange text-4xl font-bold block mb-2">
+                        +
+                    </a>
+                    <p class="text-lg font-medium">Add Article</p>
+                    <p class="mt-2">Create a new article</p>
+                @else
+                    <p class="text-lg font-medium">No articles yet.</p>
+                @endif
+            @endauth
+        </div>
+    @else
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    @foreach ($posts as $post)
+        <a href="{{ route('posts.show', $post) }}"
+           class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 block">
+
+            <h3 class="text-xl font-semibold text-dark-navy mb-2">
+                {{ $post->title }}
+            </h3>
+
+            <p class="text-gray-600 text-sm mb-4">
+                {{ \Illuminate\Support\Str::limit($post->content, 100) }}
+            </p>
+
+                    <span class="text-sm font-medium text-primary-orange">
+                    Read more →
+                    </span>
+                </a>
+            @endforeach
+        </div>
+    @endif
 </section>
 
 <section class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">

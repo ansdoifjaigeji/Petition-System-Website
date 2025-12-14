@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
 use Illuminate\Http\Request;
 use App\Models\Petition; // Import the Petition model
 
@@ -12,15 +13,13 @@ class PageController extends Controller
      */
     public function home()
     {
-        // This is your database query from Index.php, written in Eloquent
+        $posts = Post::latest()->take(6)->get();
+
         $trending_petitions = Petition::orderByDesc('signature_count')
                                       ->take(3)
                                       ->get();
-        
-        // Return the view and pass the data to it
-        return view('pages.home', [
-            'trending_petitions' => $trending_petitions
-        ]);
+
+        return view('pages.home', compact('posts', 'trending_petitions'));
     }
 
     /**

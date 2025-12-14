@@ -23,7 +23,10 @@ class User extends Authenticatable
         'dark_mode',
         'avatar',
     ];
-
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
     /**
      * The attributes that should be hidden for serialization.
      *

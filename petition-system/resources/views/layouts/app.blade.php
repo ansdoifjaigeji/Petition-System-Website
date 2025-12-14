@@ -113,6 +113,15 @@
                             </button>
 
                             <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform z-50 border border-gray-100">
+                                @auth
+                                    @if(auth()->user()->isAdmin())
+                                        <a href="{{ route('posts.index') }}"
+                                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 font-medium">
+                                            Manage Articles
+                                        </a>
+                                    @endif
+                                @endauth
+
                                 <div class="px-4 py-3 border-b border-gray-100">
                                     <p class="text-sm text-gray-500">Signed in as</p>
                                     <p class="text-sm font-bold text-gray-900 truncate">{{ auth()->user()->email }}</p>
@@ -154,6 +163,13 @@
 
                 @auth
                     <a href="{{ route('profile.show') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">My Profile</a>
+                    @if(auth()->user()->isAdmin())
+                        <a href="{{ route('posts.index') }}"
+                            class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">
+                            Manage Articles
+                        </a>
+                    @endif
+
                     <form action="{{ route('logout') }}" method="POST" class="block w-full text-left">
                         @csrf
                         <button type="submit" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">Log Out</button>

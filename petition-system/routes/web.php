@@ -6,7 +6,7 @@ use App\Http\Controllers\PetitionController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\UserProfileController;
-
+use App\Http\Controllers\PostController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,6 +25,7 @@ Route::post('/start-petition', [PetitionController::class, 'store'])->name('peti
 // Route::post('/start-petition', [PetitionController::class, 'store'])->name('petitions.store');
 
 
+
 // Authentication Routes
 // 'guest' middleware means only unauthenticated users can see it
 Route::get('/log-in', [LoginController::class, 'create'])->middleware('guest')->name('login');
@@ -33,12 +34,15 @@ Route::post('/log-out', [LoginController::class, 'destroy'])->middleware('auth')
 
 
 // --- Add these new registration routes ---
-Route::get('/register', [RegisterController::class, 'create'])->middleware('guest')->name('register');
-Route::post('/register', [RegisterController::class, 'store'])->middleware('guest')->name('register.store');
+    Route::get('/register', [RegisterController::class, 'create'])->name('register');
+    Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
+
 
 // 'auth' middleware means only logged-in users can access it
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [UserProfileController::class, 'show'])->name('profile.show');
     Route::get('/settings', [UserProfileController::class, 'settings'])->name('profile.settings');
     Route::post('/settings/preferences', [UserProfileController::class, 'updatePreferences'])->name('profile.preferences.update');
+    Route::resource('posts', PostController::class);
+    
 });
