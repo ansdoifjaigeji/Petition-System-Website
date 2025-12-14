@@ -7,7 +7,7 @@
 
     <div class="bg-white p-8 rounded-xl shadow-xl border border-gray-200">
 
-        {{-- Section Detail Petisi --}}
+        {{-- Detail Section --}}
         <h1 class="text-3xl font-extrabold text-dark-navy mb-4">
             {{ $petition->title }}
         </h1>
@@ -23,7 +23,7 @@
             </p>
         @endif
 
-        {{-- Menampilkan Jumlah Tanda Tangan --}}
+        {{-- Signature total --}}
         <p class="text-gray-700 mb-6">
             ✍️ <strong>Signatures:</strong> {{ $petition->signatures->count() }}
         </p>
@@ -35,7 +35,7 @@
                 ← Back to Explore
             </a>
 
-            {{-- Tombol edit/delete hanya untuk pemilik --}}
+            {{-- Edit/delete button --}}
             @auth
                 @if ($petition->user_id == auth()->id())
                     <div class="flex gap-2">
@@ -60,7 +60,7 @@
 
         </div>
 
-        {{-- TAMPILKAN PESAN SUKSES / ERROR (Penting) --}}
+        {{-- Error/success message --}}
         @if (session('success'))
             <div class="mt-6 p-4 bg-green-100 text-green-700 rounded-lg border border-green-300" role="alert">
                 {{ session('success') }}
@@ -74,7 +74,7 @@
         @endif
 
 
-        {{-- BAGIAN FORM TANDA TANGAN (DAPAT DIAKSES PUBLIK) --}}
+        {{-- Signature form --}}
         <div class="mt-12 p-6 bg-gray-50 rounded-lg border border-gray-200">
             <h3 class="text-2xl font-bold text-dark-navy mb-4">Sign This Petition</h3>
             
@@ -100,7 +100,7 @@
             ...
         </div>
 
-                {{-- Field Comment (Ditambahkan) --}}
+                {{-- Field Comment --}}
                 <div>
                     <textarea name="comment" placeholder="Your comment (Optional)" rows="3"
                               class="border rounded px-4 py-3 w-full focus:ring-blue-500 focus:border-blue-500 @error('comment') border-red-500 @enderror">{{ old('comment') }}</textarea>
@@ -117,7 +117,7 @@
         </div>
 
 
-        {{-- DAFTAR TANDA TANGAN (Opsional: untuk transparansi) --}}
+        {{-- Signature List --}}
         @if ($petition->signatures->count() > 0)
             <div class="mt-12">
                 <h3 class="text-2xl font-bold text-dark-navy mb-4">Recent Signatures ({{ $petition->signatures->count() }})</h3>
@@ -137,7 +137,7 @@
             </div>
         @endif
 
-    </div> {{-- End bg-white --}}
+    </div> 
 
 </div>
 @endsection

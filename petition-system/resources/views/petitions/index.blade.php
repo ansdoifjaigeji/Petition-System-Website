@@ -58,7 +58,7 @@
                            View
                         </a>
 
-                        {{-- EDIT & DELETE UNTUK PEMILIK --}}
+                        {{-- EDIT & DELETE --}}
                         @auth
                             @if($petition->user_id == auth()->id())
                                 <a href="{{ route('petitions.edit', $petition->id) }}" 
@@ -79,7 +79,7 @@
                             @endif
                         @endauth
 
-                    </div> {{-- END buttons section --}}
+                    </div> 
 
                 </div>
             @endforeach
