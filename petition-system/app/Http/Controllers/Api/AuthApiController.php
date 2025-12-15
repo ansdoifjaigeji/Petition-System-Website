@@ -32,8 +32,11 @@ class AuthApiController extends Controller
             ], 401);
         }
 
-        // 4. Create a token (This is the "Key" the app will use)
-        // Note: 'mobile-app' is just a name for the token, it can be anything.
+        // 4. Create a Sanctum personal access token. This persists a row
+        // in `personal_access_tokens` and returns the raw token string which
+        // the client must store securely (we show it in the JSON response).
+        // The token name ('mobile-app') is arbitrary and useful for
+        // identifying tokens in the DB later.
         $token = $user->createToken('mobile-app')->plainTextToken;
 
         // 5. Return the token and user data
@@ -81,11 +84,83 @@ class AuthApiController extends Controller
     public function logout(Request $request)
     {
         // Delete the token that was used to authenticate the current request
+        // `currentAccessToken()` removes only the token provided in the
+        // Authorization header; this is the typical method for logging out
+        // a single API client without affecting other tokens.
         $request->user()->currentAccessToken()->delete();
 
         return response()->json([
             'status' => 'success',
             'message' => 'Logged out successfully'
+        ], 200);
+    }
+
+    /**
+     * Update profile via API (name, email)
+     */
+    public function updateProfile(Request $request)
+    {
+        $user = $request->user();
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+        ]);
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Profile updated successfully',
+            'user' => $user,
+        ], 200);
+    }
+
+    /**
+     * Change password via API
+     */
+    public function changePassword(Request $request)
+    {
+        $user = $request->user();
+
+        $request->validate([
+            'current_password' => 'required|current_password',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Password changed successfully',
+        ], 200);
+    }
+
+    /**
+     * Delete Account via API
+     * Requires password confirmation for security
+     */
+    public function deleteAccount(Request $request)
+    {
+        // Validate the password
+        $request->validate([
+            'password' => 'required|current_password',
+        ]);
+
+        $user = $request->user();
+
+        // Delete all tokens for this user (logout all sessions)
+        $user->tokens()->delete();
+
+        // Delete the user account from the database
+        $user->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Your account has been deleted successfully.'
         ], 200);
     }
 }

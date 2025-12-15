@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
-use App\Models\Petition; // Import the Petition model
+use App\Models\Petition;
 
 class PageController extends Controller
 {
@@ -13,13 +13,13 @@ class PageController extends Controller
      */
     public function home()
     {
-        $posts = Post::latest()->take(6)->get();
-
+        // Fetch top 3 petitions by signatures (and donations as secondary sort)
         $trending_petitions = Petition::orderByDesc('signature_count')
+                                      ->orderByDesc('donation_total')
                                       ->take(3)
-                                      ->get();
+                                      ->get(['id','title','description','signature_count','donation_total']);
 
-        return view('pages.home', compact('posts', 'trending_petitions'));
+        return view('pages.home', compact('trending_petitions'));
     }
 
     /**

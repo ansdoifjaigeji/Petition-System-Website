@@ -3,7 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PetitionApiController;
-use App\Http\Controllers\Api\AuthApiController; // <-- Import the new controller
+use App\Http\Controllers\Api\AuthApiController;
+use App\Http\Controllers\Api\DonationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,25 +14,30 @@ use App\Http\Controllers\Api\AuthApiController; // <-- Import the new controller
 
 // --- Public Routes (No Login Required) ---
 
-// Login
+// Authentication
 Route::post('/login', [AuthApiController::class, 'login']);
-// Register
 Route::post('/register', [AuthApiController::class, 'register']);
 
-// Get Petitions
+// Petitions
 Route::get('/petitions', [PetitionApiController::class, 'index']);
-Route::get('/petitions/{id}', [PetitionApiController::class, 'show']);
+Route::get('/petitions/{petition}', [PetitionApiController::class, 'show']);
 
 
 // --- Protected Routes (Login Required) ---
-
 Route::middleware('auth:sanctum')->group(function () {
-    
-    // Logout
-    Route::post('/logout', [AuthApiController::class, 'logout']);
 
-    // Get Current User Profile
+    // Authentication
+    Route::post('/logout', [AuthApiController::class, 'logout']);
+    Route::post('/delete-account', [AuthApiController::class, 'deleteAccount']);
+
+    // User profile
+    Route::post('/user/update', [AuthApiController::class, 'updateProfile']);
+    Route::post('/user/change-password', [AuthApiController::class, 'changePassword']);
     Route::get('/user', function (Request $request) {
-        return $request->user();
+        return response()->json(['user' => $request->user()]);
     });
+
+    // Donations
+    Route::get('/petitions/{petition}/donations', [DonationController::class, 'index']);
+    Route::post('/petitions/{petition}/donations', [DonationController::class, 'store']);
 });
