@@ -4,66 +4,87 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-    <h1 class="text-4xl font-extrabold text-dark-navy mb-6 border-b pb-4">Explore All Petitions</h1>
-    
-    <!-- Filter tags -->
-    <div class="bg-white p-8 rounded-xl shadow-lg mb-10">
-        <p class="text-gray-700 text-lg mb-4">
-            Browse petitions by category or start your own movement.
-        </p>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center mt-6">
-            <span class="px-4 py-2 bg-gray-100 rounded-lg text-sm font-medium text-gray-600">#Environment</span>
-            <span class="px-4 py-2 bg-gray-100 rounded-lg text-sm font-medium text-gray-600">#SocialJustice</span>
-            <span class="px-4 py-2 bg-gray-100 rounded-lg text-sm font-medium text-gray-600">#Education</span>
-            <span class="px-4 py-2 bg-gray-100 rounded-lg text-sm font-medium text-gray-600">#LocalIssues</span>
+
+    <h1 class="text-4xl font-extrabold text-dark-navy mb-6 border-b pb-4">
+        Explore All Petitions
+    </h1>
+
+    {{-- Success message --}}
+    @if (session('success'))
+        <div class="mb-6 p-4 bg-green-100 border border-green-300 text-green-700 rounded-lg">
+            {{ session('success') }}
         </div>
-        
-        <div class="flex justify-center mt-8">
+    @endif
+
+    {{-- If no petitions --}}
+    @if($petitions->isEmpty())
+        <p class="text-gray-600 text-lg text-center mt-12">No petitions found. Be the first to create one!</p>
+        <div class="flex justify-center mt-4">
             <a href="{{ route('petitions.create') }}" 
                class="px-8 py-3 text-white font-semibold bg-primary-orange rounded-lg shadow-xl hover:bg-orange-600 transition duration-300">
-                Start a New Petition
+               Start a New Petition
             </a>
         </div>
-    </div>
+    @else
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-    <!-- Petition listing -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        @forelse($petitions as $petition)
-            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 flex flex-col justify-between">
-                <div>
-                    <h3 class="text-xl font-semibold text-dark-navy mb-2">
+            @foreach ($petitions as $petition)
+                <div class="bg-white p-6 shadow-xl rounded-xl border border-gray-100 hover:shadow-2xl transition">
+
+                    <h2 class="text-xl font-bold text-dark-navy mb-2">
                         {{ $petition->title }}
-                    </h3>
-                    <p class="text-gray-600 text-sm mb-4">
-                        {{ \Illuminate\Support\Str::limit($petition->description, 120) }}
-                    </p>
-                    <div class="flex justify-between text-sm font-medium">
-                        <span class="text-blue-600">{{ number_format($petition->signature_count) }} Signatures</span>
-                        <span class="text-green-600">Rp {{ number_format($petition->donation_total, 0) }} Donations</span>
-                    </div>
-                </div>
-                <div class="flex gap-2 mt-4">
-                    <a href="{{ route('petitions.show', $petition->id) }}" 
-                       class="flex-1 px-4 py-2 text-center text-white bg-primary-orange rounded-lg shadow hover:bg-orange-600 transition">
-                        View & Donate
-                    </a>
-                </div>
-            </div>
-        @empty
-            <div class="col-span-1 md:col-span-3 text-center text-gray-600 py-8 bg-white rounded-xl shadow-lg">
-                <p class="text-lg font-medium">No petitions found.</p>
-                <p class="mt-2">Be the first to 
-                    <a href="{{ route('petitions.create') }}" class="text-primary-orange font-semibold hover:underline">
-                        start one
-                    </a>!
-                </p>
-            </div>
-        @endforelse
-    </div>
+                    </h2>
 
-    <!-- Pagination -->
-    <div class="mt-10">
-        {{ $petitions->links() }}
-    </div>
+                    <p class="text-gray-600 text-sm mb-3">
+                        {{ Str::limit($petition->description, 120) }}
+                    </p>
+
+                    @if ($petition->target)
+                        <p class="text-sm text-gray-500 mb-3">
+                            🎯 Target: <span class="font-medium text-dark-navy">{{ $petition->target }}</span>
+                        </p>
+                    @endif
+
+                    <p class="text-sm text-gray-500 mb-4">
+                        ✍️ Signatures: {{ $petition->signature_count ?? 0 }}
+                    </p>
+
+                    {{-- BUTTON SECTION --}}
+                    <div class="flex justify-between mt-4">
+
+                        {{-- VIEW --}}
+                        <a href="{{ route('petitions.show', $petition->id) }}" 
+                           class="text-primary-orange font-semibold hover:underline">
+                           View
+                        </a>
+
+                        {{-- EDIT & DELETE --}}
+                        @auth
+                            @if($petition->user_id == auth()->id())
+                                <a href="{{ route('petitions.edit', $petition->id) }}" 
+                                   class="text-blue-600 hover:underline">
+                                   Edit
+                                </a>
+
+                                <form action="{{ route('petitions.destroy', $petition->id) }}" 
+                                      method="POST"
+                                      onsubmit="return confirm('Are you sure you want to delete this petition?');"
+                                      class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-600 hover:underline">
+                                        Delete
+                                    </button>
+                                </form>
+                            @endif
+                        @endauth
+
+                    </div> 
+
+                </div>
+            @endforeach
+
+        </div>
+    @endif
 </div>
 @endsection

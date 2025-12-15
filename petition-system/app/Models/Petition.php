@@ -14,17 +14,17 @@ class Petition extends Model
      *
      * @var array<int, string>
      */
-    // --- ADD THIS ARRAY ---
+    
     protected $fillable = [
-        'title',
-        'description',
-        'target',
-        'signature_count',
-        // 'user_id', // You can add this later
-    ];
+    'title',
+    'description',
+    'target',
+    'signature_count',
+    'user_id',
+];
+public function signatures()
+{
+    return $this->hasMany(Signature::class);
+}
 
-    public function donations()
-    {
-        return $this->hasMany(Donation::class);
-    }
 }

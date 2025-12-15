@@ -8,13 +8,11 @@ use Illuminate\Http\Request;
 class PetitionController extends Controller
 {
     /**
-     * Display a listing of petitions (Explore page).
+     * Display a listing of all petitions.
      */
     public function index()
     {
-        // Fetch petitions ordered by signature count, with pagination
-        $petitions = Petition::orderByDesc('signature_count')->paginate(10);
-
+        $petitions = Petition::all();
         return view('petitions.index', compact('petitions'));
     }
 
@@ -31,32 +29,84 @@ class PetitionController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate petition input
-        $validated = $request->validate([
+        $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'target' => 'nullable|integer|min:0',
         ]);
 
-        // Create petition with defaults for signatures and donations
-        $petition = Petition::create(array_merge($validated, [
-            'signature_count' => 0,
-            'donation_total' => 0,
-        ]));
+        // Add default values
+        $validatedData['signature_count'] = 0;
+        $validatedData['user_id'] = auth()->id();
 
-        // Redirect to petition detail page with success message
-        return redirect()->route('petitions.show', $petition)
-                         ->with('success', 'Petition created successfully!');
+        Petition::create($validatedData);
+
+        return redirect()->route('petitions.index')
+            ->with('success', 'Petition created successfully!');
     }
 
     /**
-     * Display the specified petition with donations.
+     * Show the form for editing the specified petition.
      */
-    public function show(Petition $petition)
+    public function edit($id)
     {
-        // Eager load donations with user relationship
-        $petition->load(['donations.user']);
-
-        return view('petitions.show', compact('petition'));
+        $petition = Petition::findOrFail($id);
+        return view('petitions.edit', compact('petition'));
     }
+
+    /**
+     * Update the specified petition in storage.
+     */
+    public function update(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'target' => 'nullable|string|max:255',
+        ]);
+
+        $petition = Petition::findOrFail($id);
+        $petition->update($validatedData);
+
+        return redirect()->route('petitions.index')
+            ->with('success', 'Petition updated successfully!');
+    }
+
+    /**
+     * Delete petition.
+     */
+    public function destroy($id)
+    {
+        Petition::findOrFail($id)->delete();
+
+        return redirect()->route('petitions.index')
+            ->with('success', 'Petition deleted successfully!');
+    }
+    /**
+ * Display a single petition.
+ */
+public function show($id)
+{
+    $petition = Petition::findOrFail($id);
+    return view('petitions.show', compact('petition'));
+}
+
+public function sign(Request $request, $id)
+{
+    // Validasi
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|max:255',
+    ]);
+
+    // Save signature
+    SignatureController::create([
+        'petition_id' => $id,
+        'name' => $request->name,
+        'email' => $request->email,
+    ]);
+
+    return redirect()->back()->with('success', 'Thank you for signing!');
+}
+
 }
