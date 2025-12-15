@@ -87,4 +87,27 @@ class SignatureController extends Controller
         return redirect()->route('petitions.show', $petition->id)
             ->with('success', 'Thank you! Your signature has been successfully added.');
     }
+
+    /**
+     * Delete the comment on a signature (only owner may delete their comment).
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id Signature ID
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyComment(Request $request, $id)
+    {
+        $signature = Signature::findOrFail($id);
+
+        if (!Auth::check() || $signature->user_id !== Auth::id()) {
+            return redirect()->route('petitions.show', $signature->petition_id)
+                ->with('error', 'You are not authorized to delete this comment.');
+        }
+
+        $signature->comment = null;
+        $signature->save();
+
+        return redirect()->route('petitions.show', $signature->petition_id)
+            ->with('success', 'Comment deleted successfully.');
+    }
 }

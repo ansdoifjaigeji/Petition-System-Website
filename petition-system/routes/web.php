@@ -46,6 +46,9 @@ Route::middleware('auth')->group(function () {
 
     // Logout
     Route::post('/log-out', [LoginController::class, 'destroy'])->name('logout');
+
+    // Delete a comment from a signature (only by owner)
+    Route::delete('/signatures/{id}/comment', [App\Http\Controllers\SignatureController::class, 'destroyComment'])->name('signature.comment.destroy');
 });
 
 // Authentication Routes (guest only)

@@ -32,9 +32,33 @@
 
             <div class="mt-8 border-t border-gray-200 dark:border-gray-700 pt-6">
                 <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">My Activity</h3>
-                <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 text-center text-gray-500 dark:text-gray-400">
-                    <p>You haven't started any petitions yet.</p>
-                </div>
+                @if(isset($comments) && $comments->count() > 0)
+                    <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+                        <h4 class="font-semibold mb-3">My Recent Comments</h4>
+                        <ul class="space-y-3 text-left text-gray-700 dark:text-gray-300">
+                            @foreach($comments as $comment)
+                                <li class="border border-gray-200 rounded p-3 flex justify-between items-start">
+                                    <div>
+                                        <a href="{{ route('petitions.show', $comment->petition->id) }}" class="font-semibold text-blue-600 hover:underline">{{ $comment->petition->title }}</a>
+                                        <p class="text-sm italic mt-1">"{{ $comment->comment }}"</p>
+                                        <p class="text-xs text-gray-500 mt-1">Signed on {{ $comment->created_at->format('M d, Y') }}</p>
+                                    </div>
+                                    <div>
+                                        <form action="{{ route('signature.comment.destroy', $comment->id) }}" method="POST" onsubmit="return confirm('Delete your comment?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-sm text-red-600 hover:underline">Delete</button>
+                                        </form>
+                                    </div>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @else
+                    <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 text-center text-gray-500 dark:text-gray-400">
+                        <p>You haven't posted any comments yet.</p>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

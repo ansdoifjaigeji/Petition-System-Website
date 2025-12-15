@@ -13,9 +13,11 @@ class UserProfileController extends Controller
     public function show()
     {
         $user = Auth::user();
+        // Load recent comments (signatures with comments) for the profile dashboard
+        $comments = $user->signatures()->whereNotNull('comment')->with('petition')->orderBy('created_at', 'desc')->get();
+
         // Render the profile dashboard for the authenticated user.
-        // The view expects a `$user` variable provided via compact().
-        return view('profile.show', compact('user'));
+        return view('profile.show', compact('user', 'comments'));
     }
 
     // 2. Account Settings

@@ -111,7 +111,7 @@
 
                 <button type="submit"
                          class="mt-2 px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition w-full sm:w-max">
-                    Sign the petition now!h
+                    Sign the petition now!
                 </button>
             </form>
         </div>
@@ -126,8 +126,18 @@
                         <li class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
                             <p class="font-semibold text-lg">{{ $signature->name }}</p>
                             @if ($signature->comment)
-                                <blockquote class="text-gray-700 italic border-l-4 border-blue-400 pl-3 mt-1">
-                                    "{{ $signature->comment }}"
+                                <blockquote class="text-gray-700 italic border-l-4 border-blue-400 pl-3 mt-1 flex justify-between items-start gap-4">
+                                    <span>"{{ $signature->comment }}"</span>
+
+                                    @auth
+                                        @if ($signature->user_id && $signature->user_id == auth()->id())
+                                            <form action="{{ route('signature.comment.destroy', $signature->id) }}" method="POST" onsubmit="return confirm('Delete your comment?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="ml-2 text-xs text-red-600 hover:underline">Delete</button>
+                                            </form>
+                                        @endif
+                                    @endauth
                                 </blockquote>
                             @endif
                             <p class="text-xs text-gray-500 mt-1">Signed on {{ $signature->created_at->format('M d, Y') }}</p>

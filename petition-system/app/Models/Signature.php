@@ -13,6 +13,8 @@ class Signature extends Model
         'petition_id',
         'name',
         'email',
+        'user_id',
+        'comment',
     ];
 
     public function petition()
