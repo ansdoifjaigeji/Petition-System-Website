@@ -6,6 +6,7 @@ use App\Http\Controllers\PetitionController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\DonationWebController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,7 +14,7 @@ use App\Http\Controllers\UserProfileController;
 |--------------------------------------------------------------------------
 */
 
-// Static Page Routes
+// --- Static Pages ---
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/about-us', [PageController::class, 'about'])->name('about');
 

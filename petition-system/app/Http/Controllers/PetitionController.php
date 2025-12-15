@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Petition;
+use Illuminate\Http\Request;
 
 class PetitionController extends Controller
 {
@@ -32,7 +32,7 @@ class PetitionController extends Controller
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'target' => 'nullable|string|max:255',
+            'target' => 'nullable|integer|min:0',
         ]);
 
         // Add default values

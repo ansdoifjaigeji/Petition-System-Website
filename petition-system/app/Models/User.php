@@ -23,7 +23,10 @@ class User extends Authenticatable
         'dark_mode',
         'avatar',
     ];
-
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -44,8 +47,7 @@ class User extends Authenticatable
         'dark_mode' => 'boolean',
     ];
 
-    public function signatures()
-    {
-        return $this->hasMany(\App\Models\Signature::class);
+    public function donations() {
+        return $this->hasMany(Donation::class);
     }
 }
