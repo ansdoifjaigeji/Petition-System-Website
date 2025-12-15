@@ -19,7 +19,10 @@ class PageController extends Controller
                                       ->take(3)
                                       ->get(['id','title','description','signature_count','donation_total']);
 
-        return view('pages.home', compact('trending_petitions'));
+        // Latest articles/posts (used on the home page)
+        $posts = Post::orderByDesc('created_at')->take(3)->get(['id','title','content']);
+
+        return view('pages.home', compact('trending_petitions', 'posts'));
     }
 
     /**

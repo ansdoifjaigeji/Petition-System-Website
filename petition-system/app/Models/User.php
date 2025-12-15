@@ -50,4 +50,9 @@ class User extends Authenticatable
     public function donations() {
         return $this->hasMany(Donation::class);
     }
+
+    public function signatures()
+    {
+        return $this->hasMany(\App\Models\Signature::class);
+    }
 }
